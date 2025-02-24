@@ -8,7 +8,7 @@ const todoStore = useTodoStore();
 
 // Methods
 
-// setTransitionHooks, Computed, watch 
+// Hooks, Computed, watch 
 onMounted(() => { todoStore.getAllTodos(); })
 
 </script>
@@ -22,14 +22,22 @@ onMounted(() => { todoStore.getAllTodos(); })
           <div class="card-body">
             <h4 class="card-title text-center">Task List</h4>
 
-            <div class="row">
+            <div class="row mb-3">
               <form action="">
                 <div class="col-md-12">
-                  <label for="" class="form-label">Add New Task</label>
+                  <label for="" class="form-label">
+                    <span v-if="!todoStore.isEdit">Add New Task</span>
+                    <span v-else>Update Task</span>
+                  </label>
                   <input type="text" class="form-control" v-model="todoStore.todoForm.title">
                 </div>
-                <div class="mt-3">
+
+                <div class="mt-3" v-if="!todoStore.isEdit">
                   <input type="button" class="btn btn-success" value="Add Task" @click.prevent="todoStore.createTodo">
+                </div>
+                <div class="mt-3" v-else="!todoStore.isEdit">
+                  <input type="button" class="btn" :class="todoStore.isEdit ? 'btn-warning' : ''" value="Update Task"
+                    @click.prevent="todoStore.updateTodo(todoStore.editId)">
                 </div>
               </form>
             </div>
@@ -47,7 +55,13 @@ onMounted(() => { todoStore.getAllTodos(); })
                   <span :class="todo.completed ? 'text-decoration-line-through' : ''">{{ todo.title }}</span>
                 </div>
 
-                <a href="" class="btn"><i class="fa-solid fa-xmark"></i></a>
+                <div>
+                  <button class="btn" @click.prevent="todoStore.getTodo(todo.id)"><i
+                      class="fa-solid fa-edit"></i></button>
+                  <button class="btn" @click.prevent="todoStore.deleteTodo(todo.id)"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </div>
+
               </li>
             </ul>
           </div>
